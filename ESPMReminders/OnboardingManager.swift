@@ -32,16 +32,24 @@ class OnboardingManager {
     private var sapURLSession: SAPURLSession!
     private var state: State = .onboarding
 
+    private var nssResource: SAPcpmsClientResourcesDownloadStep.ClientResourceInfo? = nil
+    private var nssResourceURL: URL? = nil
+    
     var delegate: OnboardingManagerDelegate?
 
     /// Steps executed during Onboarding.
     private var onboardingSteps: [OnboardingStep] {
+        nssResource = getNssResource()
+        nssResourceURL = getNssResourceURL(nssResource: nssResource!)
+        
         return [
             self.configuredWelcomeScreenStep(),
             CompositeStep(steps: SAPcpmsDefaultSteps.configuration),
             self.configuredOAuth2AuthenticationStep(),
             CompositeStep(steps: SAPcpmsDefaultSteps.settingsDownload),
+            SAPcpmsClientResourcesDownloadStep(clientResourceInfoList: [nssResource!]),
             CompositeStep(steps: SAPcpmsDefaultSteps.applyDuringOnboard),
+            NUIStyleSheetApplyStep(fileURL: nssResourceURL!),
             self.configuredUserConsentStep(),
             self.configuredStoreManagerStep(),
         ]
@@ -49,13 +57,18 @@ class OnboardingManager {
 
     /// Steps executed during Restoring.
     private var restoringSteps: [OnboardingStep] {
+        nssResource = getNssResource()
+        nssResourceURL = getNssResourceURL(nssResource: nssResource!)
+        
         return [
             self.configuredStoreManagerStep(),
             self.configuredWelcomeScreenStep(),
             CompositeStep(steps: SAPcpmsDefaultSteps.configuration),
             self.configuredOAuth2AuthenticationStep(),
             CompositeStep(steps: SAPcpmsDefaultSteps.settingsDownload),
+            SAPcpmsClientResourcesDownloadStep(clientResourceInfoList: [nssResource!]),
             CompositeStep(steps: SAPcpmsDefaultSteps.applyDuringRestore.map { ($0 as? PasscodePolicyApplyStep)?.defaultPasscodePolicy = nil; return $0 }),
+            NUIStyleSheetApplyStep(fileURL: nssResourceURL!)
         ]
     }
 
@@ -324,6 +337,19 @@ class OnboardingManager {
         URLCache.shared.removeAllCachedResponses()
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
     }
+    
+    private func getNssResource() -> SAPcpmsClientResourcesDownloadStep.ClientResourceInfo {
+        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let nssResource = SAPcpmsClientResourcesDownloadStep.ClientResourceInfo(mandatory: true, canOverwrite: true, name: "CustomTheme", version: nil, folderURL: path)
+        
+        return nssResource
+    }
+    
+    private func getNssResourceURL(nssResource: SAPcpmsClientResourcesDownloadStep.ClientResourceInfo) -> URL {
+        let url = nssResource.folderURL!.appendingPathComponent("\(nssResource.name ?? "Theme").nss").standardizedFileURL
+        return url
+    }
+
 }
 
 // MARK: - Managing the OnboardingID
