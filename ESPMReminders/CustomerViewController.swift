@@ -11,6 +11,7 @@ import SAPFoundation
 import SAPOData
 import SAPFiori
 import SAPCommon
+import EventKit
 
 class CustomerViewController: FUIFormTableViewController, SAPFioriLoadingIndicator {
     private let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -27,6 +28,10 @@ class CustomerViewController: FUIFormTableViewController, SAPFioriLoadingIndicat
     
     private var activities = [FUIActivityItem.phone, FUIActivityItem.email, FUIActivityItem.detail]
     
+    var eventStore: EKEventStore!
+    var calendars:Array<EKCalendar> = []
+    var espmCalendar: EKCalendar!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,6 +39,64 @@ class CustomerViewController: FUIFormTableViewController, SAPFioriLoadingIndicat
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 98
         self.updateTable()
+        
+        eventStore = EKEventStore()
+        eventStore.requestAccess(to: EKEntityType.reminder, completion: {(granted, error) in
+            if !granted {
+                self.logger.error("Access to reminders not granted")
+            } else {
+                self.calendars = self.eventStore.calendars(for: EKEntityType.reminder)
+                
+                self.checkIfESPMReminderListExists()
+            }
+        })
+    }
+    
+    func checkIfESPMReminderListExists() {
+        var calenderExists = false
+        
+        for calendar in calendars as [EKCalendar] {
+            if calendar.title == "ESPM" {
+                calenderExists = true
+                self.espmCalendar = calendar
+            }
+        }
+        
+        if !calenderExists {
+            createESPMReminderList()
+        }
+    }
+    
+    func createESPMReminderList() {
+        espmCalendar = EKCalendar(for: EKEntityType.reminder, eventStore: self.eventStore)
+        espmCalendar.title="ESPM"
+        espmCalendar.source = self.eventStore.defaultCalendarForNewReminders()?.source
+        
+        do {
+            try self.eventStore.saveCalendar(espmCalendar, commit:true)
+        } catch let error {
+            logger.error("Calendar creation failed with error \(error.localizedDescription)")
+        }
+    }
+    
+    func createReminder(customer: Customer) {
+        let reminder = EKReminder(eventStore: self.eventStore)
+        
+        reminder.title = "Call \(customer.firstName!) \(customer.lastName!)"
+        reminder.notes = "Phone: \(customer.phoneNumber!)\nEmail: \(customer.emailAddress!)"
+        
+        reminder.calendar = self.espmCalendar
+        
+        do {
+            try self.eventStore.save(reminder, commit: true)
+            
+            let alert = UIAlertController(title: NSLocalizedString("keyReminderCreated", value: "Reminder has been created", comment: "XTIT: Title of reminder creation pop up."), message: "Reminder has been created", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: self.okTitle, style: .default))
+            self.present(alert, animated: true, completion: nil)
+            
+        } catch let error {
+            print("Reminder failed with error \(error.localizedDescription)")
+        }
     }
 
     // MARK: - Table view data source
@@ -74,7 +137,7 @@ class CustomerViewController: FUIFormTableViewController, SAPFioriLoadingIndicat
                     UIApplication.shared.open(sms)
                 }
             case FUIActivityItem.detail:
-                // self.createReminder(customer: customer)
+                self.createReminder(customer: customer)
                 break
             default:
                 break
@@ -82,7 +145,6 @@ class CustomerViewController: FUIFormTableViewController, SAPFioriLoadingIndicat
         }
         cell.detailImage = #imageLiteral(resourceName: "PersonPlaceholder")
 
-        
         return cell
     }
 
