@@ -21,6 +21,7 @@
 		17E00EFE1A0B2C13FD4ACE1F /* ESPMContainerMetadataText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D07E370C38605E777F97625 /* ESPMContainerMetadataText.swift */; };
 		23B6C16D25DBB0C52321CD8C /* ESPMContainerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A840BCC3819D9DED8DD2EFB4 /* ESPMContainerFactory.swift */; };
 		3184C64021B97B3400563808 /* CustomerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3184C63F21B97B3400563808 /* CustomerViewController.swift */; };
+		3184C64221B98C8F00563808 /* CustomTheme.nss in Resources */ = {isa = PBXBuildFile; fileRef = 3184C64121B98C8F00563808 /* CustomTheme.nss */; };
 		354039EFA51C69A921963130 /* Supplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E5925BE4B7617BAE468111 /* Supplier.swift */; };
 		3A7E330BB4E4DCB40532F2BB /* Customer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE76622FA87003296FC46014 /* Customer.swift */; };
 		4DB2E2E4B8DEE8D554171771 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152872C0EDAD1CD1A0DFBDD5 /* Product.swift */; };
@@ -79,6 +80,7 @@
 		12E84FE21F4ECC3E0061C99E /* SAPFioriFlows.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SAPFioriFlows.framework; sourceTree = "<group>"; };
 		152872C0EDAD1CD1A0DFBDD5 /* Product.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Product.swift; path = "Proxy Classes/com.sap.tutorials.demoapp.ESPMReminders/public/Product.swift"; sourceTree = "<group>"; };
 		3184C63F21B97B3400563808 /* CustomerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerViewController.swift; sourceTree = "<group>"; };
+		3184C64121B98C8F00563808 /* CustomTheme.nss */ = {isa = PBXFileReference; lastKnownFileType = text; path = CustomTheme.nss; sourceTree = "<group>"; };
 		3B861BCBE0AACFCC15BDB0ED /* ESPMContainerMetadataChanges.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ESPMContainerMetadataChanges.swift; path = "Proxy Classes/com.sap.tutorials.demoapp.ESPMReminders/internal/ESPMContainerMetadataChanges.swift"; sourceTree = "<group>"; };
 		41AF4CAB4690757B7FA2C6A7 /* ProductCategory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProductCategory.swift; path = "Proxy Classes/com.sap.tutorials.demoapp.ESPMReminders/public/ProductCategory.swift"; sourceTree = "<group>"; };
 		47E5925BE4B7617BAE468111 /* Supplier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Supplier.swift; path = "Proxy Classes/com.sap.tutorials.demoapp.ESPMReminders/public/Supplier.swift"; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 		7A1315AC1D4B982000A5DA56 = {
 			isa = PBXGroup;
 			children = (
+				3184C64121B98C8F00563808 /* CustomTheme.nss */,
 				7A16F06C1FD1B3C700D2FABD /* README.md */,
 				7A1315B71D4B982000A5DA56 /* ESPMReminders */,
 				7A1315B61D4B982000A5DA56 /* Products */,
@@ -310,6 +313,7 @@
 			files = (
 				7A16F06D1FD1B3C700D2FABD /* README.md in Resources */,
 				7A1315C51D4B982000A5DA56 /* LaunchScreen.storyboard in Resources */,
+				3184C64221B98C8F00563808 /* CustomTheme.nss in Resources */,
 				12D066CF1F4DDB0E0075EBA4 /* (null) in Resources */,
 				7A1315C21D4B982000A5DA56 /* Assets.xcassets in Resources */,
 				CBCA7A991E3778A9001AF49E /* Main.storyboard in Resources */,

@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     var espmContainer: ESPMContainer<OnlineODataProvider>!
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        NUISettings.initWithStylesheet(name: "CustomTheme")
         // Set a FUIInfoViewController as the rootViewController, since there it is none set in the Main.storyboard
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window!.rootViewController = FUIInfoViewController.createSplashScreenInstanceFromStoryboard()
